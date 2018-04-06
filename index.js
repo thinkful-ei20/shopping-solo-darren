@@ -75,7 +75,8 @@ function handleItemCheckClicked() {
 function handleDeleteItemClicked() {
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    STORE.splice(['itemIndex'], 1);
+    STORE.splice(itemIndex, 1);
+    console.log(itemIndex);
     renderShoppingList();
   });
   console.log('`handleDeleteItemClicked` ran');
