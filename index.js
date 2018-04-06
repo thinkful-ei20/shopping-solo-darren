@@ -7,7 +7,10 @@ const STORE = {
     {name: 'milk', checked: true},
     {name: 'bread', checked: false}
   ],
-  filter : {checked: false},
+  filter : {
+    checked: false,
+    searchTerm: '',
+  },
 };
 
 function generateItemElement(item, itemIndex, template) {
@@ -33,12 +36,20 @@ function generateShoppingItemsString(shoppingList) {
 }
 
 function renderShoppingList() {
+
+//.filter(item => !item.checked && item.name.indexOf(STORE.filter.searchTerm)
+
   console.log('`renderShoppingList` ran');
   console.log(STORE.filter.checked);
   let filteredItems = [...STORE.items];
   if (STORE.filter.checked === true) {
     filteredItems = filteredItems.filter(item => !item.checked);    
   }
+
+  // if (STORE.filter.searchTerm !== '') {
+  //   filteredItems = filteredItems.filter(item => item.name.toLowerCase().indexOf('o')>-1);
+  // }
+
   console.log(filteredItems);
 
  
@@ -93,6 +104,8 @@ function handleDeleteItemClicked() {
   console.log('`handleDeleteItemClicked` ran');
 }
 
+
+
 function handleCheckedCheckbox() {
   $('#js-checkbox-form').on('change', event => {
     
@@ -108,12 +121,26 @@ function handleCheckedCheckbox() {
   });
 }
 
+function handleItemSearchSubmit() {
+  $('#js-search-form').on('submit', event => {
+    event.preventDefault();
+    // STORE.filter.searchTerm = STORE.filter.searchTerm
+    const newSearch = $('.js-search-input').val();
+
+
+    $('.js-search-input').val('');
+    renderShoppingList();
+  });
+
+}
+
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleCheckedCheckbox();
+  handleItemSearchSubmit();
 }
 
 $(handleShoppingList);
