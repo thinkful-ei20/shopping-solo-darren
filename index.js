@@ -1,11 +1,21 @@
 'use strict';
 
-const STORE = [
-  {name: 'apples', checked: false},
-  {name: 'oranges', checked: false},
-  {name: 'milk', checked: true},
-  {name: 'bread', checked: false}
-];
+// const STORE = [
+//   {name: 'apples', checked: false},
+//   {name: 'oranges', checked: false},
+//   {name: 'milk', checked: true},
+//   {name: 'bread', checked: false}
+// ];
+
+const STORE = {
+  items: [
+    {name: 'apples', checked: false},
+    {name: 'oranges', checked: false},
+    {name: 'milk', checked: true},
+    {name: 'bread', checked: false}
+  ],
+  sortBy : 'checkedRemoved',
+};
 
 function generateItemElement(item, itemIndex, template) {
   return `
@@ -31,13 +41,13 @@ function generateShoppingItemsString(shoppingList) {
 
 function renderShoppingList() {
   console.log('`renderShoppingList` ran');
-  const shoppingListItemsString = generateShoppingItemsString(STORE);
+  const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   $('.js-shopping-list').html(shoppingListItemsString);
 }
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.push({name: itemName, checked: false});
+  STORE.items.push({name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
@@ -53,7 +63,7 @@ function handleNewItemSubmit() {
 
 function toggleCheckedForListItem(itemIndex) {
   console.log('Toggling checked property for item at index ' + itemIndex);
-  STORE[itemIndex].checked = !STORE[itemIndex].checked;
+  STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
 }
 
 function getItemIndexFromElement(item) {
@@ -75,7 +85,7 @@ function handleItemCheckClicked() {
 function handleDeleteItemClicked() {
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    STORE.splice(itemIndex, 1);
+    STORE.items.splice(itemIndex, 1);
     console.log(itemIndex);
     renderShoppingList();
   });
