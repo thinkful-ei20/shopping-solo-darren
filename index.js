@@ -1,12 +1,5 @@
 'use strict';
 
-// const STORE = [
-//   {name: 'apples', checked: false},
-//   {name: 'oranges', checked: false},
-//   {name: 'milk', checked: true},
-//   {name: 'bread', checked: false}
-// ];
-
 const STORE = {
   items: [
     {name: 'apples', checked: false},
@@ -14,7 +7,7 @@ const STORE = {
     {name: 'milk', checked: true},
     {name: 'bread', checked: false}
   ],
-  sortBy : 'checkedRemoved',
+  filter : {checked: false},
 };
 
 function generateItemElement(item, itemIndex, template) {
@@ -41,7 +34,15 @@ function generateShoppingItemsString(shoppingList) {
 
 function renderShoppingList() {
   console.log('`renderShoppingList` ran');
-  const shoppingListItemsString = generateShoppingItemsString(STORE.items);
+  console.log(STORE.filter.checked);
+  let filteredItems = [...STORE.items];
+  if (STORE.filter.checked === true) {
+    filteredItems = filteredItems.filter(item => !item.checked);    
+  }
+  console.log(filteredItems);
+
+ 
+  const shoppingListItemsString = generateShoppingItemsString(filteredItems);
   $('.js-shopping-list').html(shoppingListItemsString);
 }
 
@@ -92,12 +93,27 @@ function handleDeleteItemClicked() {
   console.log('`handleDeleteItemClicked` ran');
 }
 
+function handleCheckedCheckbox() {
+  $('#js-checkbox-form').on('change', event => {
+    
+    // let isChecked = $(event.target).val() === 'false' ? true : false;
+    STORE.filter.checked = STORE.filter.checked ? false : true;
+ 
+    // $(event.target).val(isChecked) ;
+
+    // STORE.filter.checked = isChecked;
+    // console.log(isChecked);
+
+    renderShoppingList();   
+  });
+}
+
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
-
+  handleCheckedCheckbox();
 }
 
 $(handleShoppingList);
