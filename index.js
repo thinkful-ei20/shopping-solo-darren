@@ -2,10 +2,10 @@
 
 const STORE = {
   items: [
-    {name: 'apples', checked: false},
-    {name: 'oranges', checked: false},
-    {name: 'milk', checked: true},
-    {name: 'bread', checked: false}
+    {name: 'apple', checked: false,},
+    {name: 'bread', checked: false},
+    {name: 'milk ', checked: true},
+    {name: 'cheese', checked: false}
   ],
   filter : {
     checked: false,
@@ -31,8 +31,20 @@ function generateItemElement(item, itemIndex, template) {
 
 function generateShoppingItemsString(shoppingList) {
   console.log('Generating shopping list element');
-  const items = shoppingList.map((item, index) => generateItemElement(item, index));
-  return items.join('');
+  console.log('----------------------------------'); //here just to break up console logs for readability
+  let items = shoppingList
+    .map((item, index) => 
+      ({
+        item,
+        html: generateItemElement(item, index)
+      }));
+  // console.log(items);
+  items = items.filter(({item}) => 
+    !STORE.filter.checked || !item.checked);
+  // console.log(items);
+  
+  return items.map(({html})=> html).join('');
+  
 }
 
 function renderShoppingList() {
@@ -40,7 +52,7 @@ function renderShoppingList() {
 //.filter(item => !item.checked && item.name.indexOf(STORE.filter.searchTerm)
 
   console.log('`renderShoppingList` ran');
-  console.log(STORE.filter.checked);
+  // console.log(STORE.filter.checked);
   let filteredItems = [...STORE.items];
   if (STORE.filter.checked === true) {
     filteredItems = filteredItems.filter(item => !item.checked);    
@@ -50,10 +62,9 @@ function renderShoppingList() {
   //   filteredItems = filteredItems.filter(item => item.name.toLowerCase().indexOf('o')>-1);
   // }
 
-  console.log(filteredItems);
-
+  // console.log(filteredItems);
  
-  const shoppingListItemsString = generateShoppingItemsString(filteredItems);
+  const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   $('.js-shopping-list').html(shoppingListItemsString);
 }
 
@@ -99,23 +110,17 @@ function handleDeleteItemClicked() {
     const itemIndex = getItemIndexFromElement(event.currentTarget);
     STORE.items.splice(itemIndex, 1);
     console.log(itemIndex);
+    console.log('`handleDeleteItemClicked` ran');
     renderShoppingList();
-  });
-  console.log('`handleDeleteItemClicked` ran');
+  });  
 }
-
-
 
 function handleCheckedCheckbox() {
   $('#js-checkbox-form').on('change', event => {
     
-    // let isChecked = $(event.target).val() === 'false' ? true : false;
+   
     STORE.filter.checked = STORE.filter.checked ? false : true;
  
-    // $(event.target).val(isChecked) ;
-
-    // STORE.filter.checked = isChecked;
-    // console.log(isChecked);
 
     renderShoppingList();   
   });
@@ -123,9 +128,10 @@ function handleCheckedCheckbox() {
 
 function handleItemSearchSubmit() {
   $('#js-search-form').on('submit', event => {
-    event.preventDefault();
+    event.preventDefault();    
     // STORE.filter.searchTerm = STORE.filter.searchTerm
     const newSearch = $('.js-search-input').val();
+    console.log(newSearch);
 
 
     $('.js-search-input').val('');
@@ -141,6 +147,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   handleCheckedCheckbox();
   handleItemSearchSubmit();
+  console.log('----------------------------------');  
 }
 
 $(handleShoppingList);
