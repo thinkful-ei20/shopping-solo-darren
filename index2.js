@@ -41,31 +41,22 @@ function generateShoppingItemsString(shoppingList) {
   console.log(items);
   items = items.filter(({item}) => 
     !STORE.filter.checked || !item.checked);
+//  !STORE.filter.checked || (STORE.filter.checked && !item.checked)
+
   // console.log(items);
+  items= items.filter(({item}) => 
+    item.name.indexOf(STORE.filter.searchTerm)>-1);
   
   return items.map(({html})=> html).join('');  
 }
 
-function renderShoppingList() {
+function renderShoppingList(items) {
+  // items = items || STORE.items;
 
-//.filter(item => !item.checked && item.name.indexOf(STORE.filter.searchTerm)
-
-  console.log('`renderShoppingList` ran');
-  // console.log(STORE.filter.checked);
-  let filteredItems = [...STORE.items];
-  if (STORE.filter.checked === true) {
-    filteredItems = filteredItems.filter(item => !item.checked);    
-  }
- 
-  if (STORE.filter.searchTerm !== '') {
-    filteredItems = filteredItems.filter(item => item.name.toLowerCase().indexOf(STORE.filter.searchTerm)>-1);
-  }
-
-  // console.log(filteredItems);
- 
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   $('.js-shopping-list').html(shoppingListItemsString);
 }
+
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
@@ -115,35 +106,47 @@ function handleDeleteItemClicked() {
 }
 
 function handleCheckedCheckbox() {
-  $('#js-checkbox-form').on('change', event => {
-    
-   
-    STORE.filter.checked = STORE.filter.checked ? false : true;
- 
-
-    renderShoppingList();   
+  $('#js-checkbox-form').on('change', event => {  
+    STORE.filter.checked = !STORE.filter.checked;
+    getCheckedData();   
   });
+}
+function getCheckedData() {
+  let filteredItems = [...STORE.items];
+  if (STORE.filter.checked === true) {
+    filteredItems = filteredItems.filter(item => !item.checked);    
+  } 
+  renderShoppingList(filteredItems); 
 }
 
 function handleItemSearchSubmit() {
   $('#js-search-form').on('submit', event => {
     event.preventDefault();    
     const newSearch = $('.js-search-input').val();
-    console.log(`${STORE.filter.searchTerm} is the search term before entering one!` );
-
-    STORE.filter.searchTerm = newSearch;
-    
-    console.log(`${STORE.filter.searchTerm} AFTERRRR` );
-    
+    // console.log(`${STORE.filter.searchTerm} is the search term before entering one!` );
+    STORE.filter.searchTerm = newSearch;    
+    // console.log(`${STORE.filter.searchTerm} AFTER entering text` );    
     console.log(newSearch);
     
 
 
     $('.js-search-input').val('');
     renderShoppingList();
+    // getSearchedData();    
   });
-
 }
+// function getSearchedData() {
+//   let filteredItems = [...STORE.items];
+//   if (STORE.filter.searchTerm !== '') {
+//     filteredItems = filteredItems.filter(item => item.name.indexOf(STORE.filter.searchTerm)>-1);
+//   }
+//   renderShoppingList(filteredItems);
+// }
+
+function INDEX2(){
+  console.log('This is the Index2 JS file running......');
+}
+
 
 function handleShoppingList() {
   renderShoppingList();
@@ -152,7 +155,9 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   handleCheckedCheckbox();
   handleItemSearchSubmit();
-  console.log('----------------------------------');  
+  INDEX2();
+  console.log('----------------------------------');
+   
 }
 
 $(handleShoppingList);
