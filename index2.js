@@ -18,12 +18,18 @@ function generateItemElement(item, itemIndex, template) {
     <li class="js-item-index-element" data-item-index="${itemIndex}">
       <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
       <div class="shopping-item-controls">
+
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">check</span>
         </button>
+
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
-        </button>
+        </button>  
+       
+        <input type="text" name="edit-item" class="js-edit-input" placeholder="Edit item name">
+        <button type="button" class="js-edit-button"> Edit </button> 
+
       </div>
     </li>`;
 }
@@ -54,7 +60,7 @@ function renderShoppingList(items) {
   // items = items || STORE.items;
 
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
-  $('.js-shopping-list').html(shoppingListItemsString);
+  $('.js-shopping-list').html(shoppingListItemsString);  
 }
 
 
@@ -143,6 +149,25 @@ function handleItemSearchSubmit() {
 //   renderShoppingList(filteredItems);
 // }
 
+function commitEditChange(editValue, editIndex) {
+  STORE.items[editIndex].name = editValue;
+}
+
+function handleEditSubmit() {
+  $('.js-shopping-list').on('click', '.js-edit-button', event => {
+    event.preventDefault();
+    console.log('EDIT SUBMITTED');    
+    let editValue = $(event.currentTarget).closest('li').find('.js-edit-input').val();
+    // editValue gets the input of what was typed into given user's edit input
+    let editIndex = $(event.currentTarget).closest('li').data('item-index');
+    // edit Index gets the index of the item by using .data with data-item-index="${itemIndex}" part from generateItemElement()...
+    console.log(editValue);    
+    commitEditChange(editValue,editIndex);
+    $('.js-edit-input').val('');
+    renderShoppingList();    
+  });
+}
+
 function INDEX2(){
   console.log('This is the Index2 JS file running......');
 }
@@ -155,6 +180,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   handleCheckedCheckbox();
   handleItemSearchSubmit();
+  handleEditSubmit();
   INDEX2();
   console.log('----------------------------------');
    

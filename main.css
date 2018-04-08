@@ -52,10 +52,21 @@ button:hover {
 }
 
 #js-checkbox-form{
-  padding: 10px;
+  
+  padding-top: 15px;
 
 }
 
 #js-search-form {
-  padding: 10px;
+  display: block;
+  margin-top: 0em;
+  padding-top: 15px;
+  float: left; 
+}
+
+.search-instructions {
+  /* font-size: 12px;  */
+}
+.edit-button {
+  color: red;
 }
